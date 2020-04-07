@@ -4,18 +4,22 @@ author: rick-anderson
 description: Learn how to publish an ASP.NET Core app to Azure App Service using Visual Studio.
 ms.author: riande
 ms.custom: mvc
-ms.date: 12/06/2018
+ms.date: 07/10/2019
 uid: tutorials/publish-to-azure-webapp-using-vs
 ---
 # Publish an ASP.NET Core app to Azure with Visual Studio
 
-By [Rick Anderson](https://twitter.com/RickAndMSFT), [Cesar Blum Silveira](https://github.com/cesarbs)
+By [Rick Anderson](https://twitter.com/RickAndMSFT)
+::: moniker range=">= aspnetcore-3.0"
 
 [!INCLUDE [Azure App Service Preview Notice](../includes/azure-apps-preview-notice.md)]
 
-See [Publish to Azure from Visual Studio for Mac](https://blog.xamarin.com/publish-azure-visual-studio-mac/) if you are working on macOS.
+::: moniker-end
 
-To troubleshoot an App Service deployment issue, see <xref:host-and-deploy/azure-apps/troubleshoot>.
+
+See [Publish a Web app to Azure App Service using Visual Studio for Mac](https://docs.microsoft.com/visualstudio/mac/publish-app-svc?view=vsmac-2019) if you are working on macOS.
+
+To troubleshoot an App Service deployment issue, see <xref:test/troubleshoot-azure-iis>.
 
 ## Set up
 
@@ -121,7 +125,7 @@ Visual Studio returns to the **Create App Service** dialog.
 
 ![Configure SQL Database dialog](publish-to-azure-webapp-using-vs/_static/conf_final.png)
 
-Visual Studio creates the Web app and SQL Server on Azure. This step can take a few minutes. For information on the resources created, see [Additional resources](#additonal-resources).
+Visual Studio creates the Web app and SQL Server on Azure. This step can take a few minutes. For information on the resources created, see [Additional resources](#additional-resources).
 
 When deployment completes, select **Settings**:
 
@@ -129,8 +133,8 @@ When deployment completes, select **Settings**:
 
 On the **Settings** page of the **Publish** dialog:
 
-  * Expand **Databases** and check **Use this connection string at runtime**.
-  * Expand **Entity Framework Migrations** and check **Apply this migration on publish**.
+* Expand **Databases** and check **Use this connection string at runtime**.
+* Expand **Entity Framework Migrations** and check **Apply this migration on publish**.
 
 * Select **Save**. Visual Studio returns to the **Publish** dialog. 
 
@@ -178,10 +182,11 @@ When you have finished testing the app, go to the [Azure portal](https://portal.
 
 * <xref:host-and-deploy/azure-apps/azure-continuous-deployment>
 
-## Additonal resources
+## Additional resources
 
+* For Visual Studio Code, see [Publish profiles](xref:host-and-deploy/visual-studio-publish-profiles#publish-profiles).
 * [Azure App Service](/azure/app-service/app-service-web-overview)
 * [Azure resource groups](/azure/azure-resource-manager/resource-group-overview#resource-groups)
 * [Azure SQL Database](/azure/sql-database/)
 * <xref:host-and-deploy/visual-studio-publish-profiles>
-* <xref:host-and-deploy/azure-apps/troubleshoot>
+* <xref:test/troubleshoot-azure-iis>

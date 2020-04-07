@@ -1,21 +1,21 @@
 ---
 title: Get started with ASP.NET Core
 author: rick-anderson
-description: A quick tutorial that creates and runs a simple Hello World app using ASP.NET Core. 
+description: A short tutorial that creates and runs a basic Hello World app using ASP.NET Core. 
 ms.author: riande
 ms.custom: mvc
-ms.date: 01/15/2019
+ms.date: 01/07/2020
 uid: getting-started
 ---
 # Tutorial: Get started with ASP.NET Core
 
-This tutorial shows how to use the .NET Core command-line interface to create an ASP.NET Core web app.
+This tutorial shows how to create and run an ASP.NET Core web app using the .NET Core CLI.
 
 You'll learn how to:
 
 > [!div class="checklist"]
 > * Create a web app project.
-> * Enable local HTTPS.
+> * Trust the development certificate.
 > * Run the app.
 > * Edit a Razor page.
 
@@ -25,46 +25,48 @@ At the end, you'll have a working web app running on your local machine.
 
 ## Prerequisites
 
-* [.NET Core 2.2 SDK](https://www.microsoft.com/net/download/all)
+[!INCLUDE[](~/includes/3.1-SDK.md)]
 
 ## Create a web app project
 
 Open a command shell, and enter the following command:
 
-```console
+```dotnetcli
 dotnet new webapp -o aspnetcoreapp
 ```
 
-## Enable local HTTPS
+The preceding command:
+
+* Creates a new web app.  
+* The `-o aspnetcoreapp` parameter creates a directory named *aspnetcoreapp* with the source files for the app.
+
+### Trust the development certificate
 
 Trust the HTTPS development certificate:
 
 # [Windows](#tab/windows)
 
-```console
+```dotnetcli
 dotnet dev-certs https --trust
 ```
 
 The preceding command displays the following dialog:
 
-![Security warning dialog](_static/cert.png)
+![Security warning dialog](~/getting-started/_static/cert.png)
 
 Select **Yes** if you agree to trust the development certificate.
 
 # [macOS](#tab/macos)
 
-```console
+```dotnetcli
 dotnet dev-certs https --trust
 ```
 
 The preceding command displays the following message:
 
-*Trusting the HTTPS development certificate was requested. If the certificate is not already trusted we will run the following command:* `'sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <<certificate>>'`.  
-*This command might prompt you for your password to install the certificate on the system keychain.
+*Trusting the HTTPS development certificate was requested. If the certificate is not already trusted, we will run the following command:* `'sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <<certificate>>'`
 
-Password:*
-
-Enter your password if you agree to trust the development certificate.
+This command might prompt you for your password to install the certificate on the system keychain. Enter your password if you agree to trust the development certificate.
 
 # [Linux](#tab/linux)
 
@@ -72,24 +74,26 @@ See the documentation for your Linux distribution on how to trust the HTTPS deve
 
 ---
 
+For more information, see [Trust the ASP.NET Core HTTPS development certificate](xref:security/enforcing-ssl#trust-the-aspnet-core-https-development-certificate-on-windows-and-macos)
+
 ## Run the app
 
 Run the following commands:
 
-```console
+```dotnetcli
 cd aspnetcoreapp
-dotnet run
+dotnet watch run
 ```
 
-After the command shell indicates that the app has started, browse to [https://localhost:5001](https://localhost:5001). Click **Accept** to accept the privacy and cookie policy. This app doesn't keep personal information.
+After the command shell indicates that the app has started, browse to `https://localhost:5001`.
 
 ## Edit a Razor page
 
-Open *Pages/Index.cshtml* and modify the page with the following highlighted markup:
+Open *Pages/Index.cshtml* and modify and save the page with the following highlighted markup:
 
 [!code-cshtml[](sample/index.cshtml?highlight=9)]
 
-Browse to [https://localhost:5001](https://localhost:5001), and verify the changes are displayed.
+Browse to `https://localhost:5001`, refresh the page, and verify the changes are displayed.
 
 ## Next steps
 
@@ -97,11 +101,11 @@ In this tutorial, you learned how to:
 
 > [!div class="checklist"]
 > * Create a web app project.
-> * Enable local HTTPS.
+> * Trust the development certificate.
 > * Run the project.
 > * Make a change.
 
-To learn more about ASP.NET Core, see the introduction:
+To learn more about ASP.NET Core, see the recommended learning path in the introduction:
 
 > [!div class="nextstepaction"]
-> <xref:index>
+> <xref:index#recommended-learning-path>

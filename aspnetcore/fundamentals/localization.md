@@ -3,12 +3,12 @@ title: Globalization and localization in ASP.NET Core
 author: rick-anderson
 description: Learn how ASP.NET Core provides services and middleware for localizing content into different languages and cultures.
 ms.author: riande
-ms.date: 01/14/2017
+ms.date: 11/30/2019
 uid: fundamentals/localization
 ---
 # Globalization and localization in ASP.NET Core
 
-By [Rick Anderson](https://twitter.com/RickAndMSFT), [Damien Bowden](https://twitter.com/damien_bod), [Bart Calixto](https://twitter.com/bartmax), [Nadeem Afana](https://twitter.com/NadeemAfana), and [Hisham Bin Ateya](https://twitter.com/hishambinateya)
+By [Rick Anderson](https://twitter.com/RickAndMSFT), [Damien Bowden](https://twitter.com/damien_bod), [Bart Calixto](https://twitter.com/bartmax), [Nadeem Afana](https://afana.me/), and [Hisham Bin Ateya](https://twitter.com/hishambinateya)
 
 Creating a multilingual website with ASP.NET Core will allow your site to reach a wider audience. ASP.NET Core provides services and middleware for localizing into different languages and cultures.
 
@@ -24,7 +24,7 @@ App localization involves the following:
 
 3. Implement a strategy to select the language/culture for each request
 
-[View or download sample code](https://github.com/aspnet/Docs/tree/master/aspnetcore/fundamentals/localization/sample/Localization) ([how to download](xref:index#how-to-download-a-sample))
+[View or download sample code](https://github.com/dotnet/AspNetCore.Docs/tree/master/aspnetcore/fundamentals/localization/sample/Localization) ([how to download](xref:index#how-to-download-a-sample))
 
 ## Make the app's content localizable
 
@@ -70,7 +70,7 @@ A French resource file could contain the following:
 
 | Key | Value |
 | ----- | ------ |
-| `<i>Hello</i> <b>{0}!</b>` | `<i>Bonjour</i> <b>{0} !</b> ` |
+| `<i>Hello</i> <b>{0}!</b>` | `<i>Bonjour</i> <b>{0} !</b>` |
 
 The rendered view would contain the HTML markup from the resource file.
 
@@ -92,6 +92,7 @@ DataAnnotations error messages are localized with `IStringLocalizer<T>`. Using t
 In ASP.NET Core MVC 1.1.0 and higher, non-validation attributes are localized. ASP.NET Core MVC 1.0 does **not** look up localized strings for non-validation attributes.
 
 <a name="one-resource-string-multiple-classes"></a>
+
 ### Using one resource string for multiple classes
 
 The following code shows how to use one resource string for validation attributes with multiple classes:
@@ -107,7 +108,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-In the preceeding code, `SharedResource` is the class corresponding to the resx where your validation messages are stored. With this approach, DataAnnotations will only use `SharedResource`, rather than the resource for each class.
+In the preceding code, `SharedResource` is the class corresponding to the resx where your validation messages are stored. With this approach, DataAnnotations will only use `SharedResource`, rather than the resource for each class.
 
 ## Provide localized resources for the languages and cultures you support
 
@@ -160,6 +161,9 @@ If you don't use the `ResourcesPath` option, the *.resx* file for a view would b
 
 The [RootNamespace](/dotnet/api/microsoft.extensions.localization.rootnamespaceattribute?view=aspnetcore-2.1) attribute provides the root namespace of an assembly when the root namespace of an assembly is different than the assembly name. 
 
+> [!WARNING]
+> This can occur when a project's name is not a valid .NET identifier. For instance `my-project-name.csproj` will use the root namespace `my_project_name` and the assembly name `my-project-name` leading to this error. 
+
 If the root namespace of an assembly is different than the assembly name:
 
 * Localization does not work by default.
@@ -167,7 +171,7 @@ If the root namespace of an assembly is different than the assembly name:
 
 If the `RootNamespace` is different from the `AssemblyName`, include the following in *AssemblyInfo.cs* (with parameter values replaced with the actual values):
 
-```Csharp
+```csharp
 using System.Reflection;
 using Microsoft.Extensions.Localization;
 
@@ -191,7 +195,7 @@ As an example, if you remove the ".fr" culture designator and you have the cultu
 
 ### Generate resource files with Visual Studio
 
-If you create a resource file in Visual Studio without a culture in the file name (for example, *Welcome.resx*), Visual Studio will create a C# class with a property for each string. That's usually not what you want with ASP.NET Core. You typically don't have a default *.resx* resource file (a *.resx* file without the culture name). We suggest you create the *.resx* file with a culture name (for example *Welcome.fr.resx*). When you create a *.resx* file with a culture name, Visual Studio won't generate the class file. We anticipate that many developers won't create a default language resource file.
+If you create a resource file in Visual Studio without a culture in the file name (for example, *Welcome.resx*), Visual Studio will create a C# class with a property for each string. That's usually not what you want with ASP.NET Core. You typically don't have a default *.resx* resource file (a *.resx* file without the culture name). We suggest you create the *.resx* file with a culture name (for example *Welcome.fr.resx*). When you create a *.resx* file with a culture name, Visual Studio won't generate the class file.
 
 ### Add other cultures
 
@@ -216,6 +220,7 @@ Localization is configured in the `Startup.ConfigureServices` method:
 The current culture on a request is set in the localization [Middleware](xref:fundamentals/middleware/index). The localization middleware is enabled in the `Startup.Configure` method. The localization middleware must be configured before any middleware which might check the request culture (for example, `app.UseMvcWithDefaultRoute()`).
 
 [!code-csharp[](localization/sample/Localization/Startup.cs?name=snippet2)]
+[!INCLUDE[about the series](~/includes/code-comments-loc.md)]
 
 `UseRequestLocalization` initializes a `RequestLocalizationOptions` object. On every request the list of `RequestCultureProvider` in the `RequestLocalizationOptions` is enumerated and the first provider that can successfully determine the request culture is used. The default providers come from the `RequestLocalizationOptions` class:
 
@@ -267,10 +272,36 @@ The [Accept-Language header](https://www.w3.org/International/questions/qa-accep
 
 6. Tap the language, then tap **Move Up**.
 
+::: moniker range="> aspnetcore-3.1"
+### The Content-Language HTTP header
+
+The [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) entity header:
+
+ - Is used to describe the language(s) intended for the audience.
+ - Allows a user to differentiate according to the users' own preferred language.
+
+Entity headers are used in both HTTP requests and responses.
+
+The `Content-Language` header can be added by setting the property `ApplyCurrentCultureToResponseHeaders`.
+
+Adding the `Content-Language` header:
+
+ - Allows the RequestLocalizationMiddleware to set the `Content-Language` header with the `CurrentUICulture`.
+ - Eliminates the need to set the response header `Content-Language` explicitly.
+
+```csharp
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    ApplyCurrentCultureToResponseHeaders = true
+});
+```
+::: moniker-end
+
 ### Use a custom provider
 
 Suppose you want to let your customers store their language and culture in your databases. You could write a provider to look up these values for the user. The following code shows how to add a custom provider:
 
+::: moniker range="< aspnetcore-3.0"
 ```csharp
 private const string enUSCulture = "en-US";
 
@@ -293,13 +324,38 @@ services.Configure<RequestLocalizationOptions>(options =>
     }));
 });
 ```
+::: moniker-end
+
+::: moniker range=">= aspnetcore-3.0"
+```csharp
+private const string enUSCulture = "en-US";
+
+services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo(enUSCulture),
+        new CultureInfo("fr")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture(culture: enUSCulture, uiCulture: enUSCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
+    {
+        // My custom request culture logic
+        return new ProviderCultureResult("en");
+    }));
+});
+```
+::: moniker-end
 
 Use `RequestLocalizationOptions` to add or remove localization providers.
 
 ### Set the culture programmatically
 
 This sample **Localization.StarterWeb** project on [GitHub](https://github.com/aspnet/entropy) contains UI to set the `Culture`. The *Views/Shared/_SelectLanguagePartial.cshtml* file allows you to select the culture from the list of supported cultures:
-
 
 [!code-cshtml[](localization/sample/Localization/Views/Shared/_SelectLanguagePartial.cshtml)]
 
@@ -312,6 +368,10 @@ The `SetLanguage` method sets the culture cookie.
 [!code-csharp[](localization/sample/Localization/Controllers/HomeController.cs?range=57-67)]
 
 You can't plug in the *_SelectLanguagePartial.cshtml* to sample code for this project. The **Localization.StarterWeb** project on [GitHub](https://github.com/aspnet/entropy) has code to flow the `RequestLocalizationOptions` to a Razor partial through the [Dependency Injection](dependency-injection.md) container.
+
+## Model binding route data and query strings
+
+See [Globalization behavior of model binding route data and query strings](xref:mvc/models/model-binding#glob).
 
 ## Globalization and localization terms
 
@@ -334,11 +394,17 @@ Terms:
 * Parent culture: The neutral culture that contains a specific culture. (for example, "en" is the parent culture of "en-US" and "en-GB")
 * Locale: A locale is the same as a culture.
 
-[!INCLUDE[](~/includes/currency.md)]
+[!INCLUDE[](~/includes/localization/currency.md)]
+
+::: moniker range=">= aspnetcore-3.0"
+[!INCLUDE[](~/includes/localization/unsupported-culture-log-level.md)]
+::: moniker-end
 
 ## Additional resources
 
+* <xref:fundamentals/troubleshoot-aspnet-core-localization>
 * [Localization.StarterWeb project](https://github.com/aspnet/Entropy/tree/master/samples/Localization.StarterWeb) used in the article.
 * [Globalizing and localizing .NET applications](/dotnet/standard/globalization-localization/index)
 * [Resources in .resx Files](/dotnet/framework/resources/working-with-resx-files-programmatically)
 * [Microsoft Multilingual App Toolkit](https://marketplace.visualstudio.com/items?itemName=MultilingualAppToolkit.MultilingualAppToolkit-18308)
+* [Localization & Generics](http://hishambinateya.com/localization-and-generics)

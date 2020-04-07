@@ -19,7 +19,7 @@ In this section [Entity Framework](/ef/core/get-started/aspnetcore/new-db) Code 
 When EF Code First is used to automatically create a database, Code First:
 
 * Adds a table to the database to  track the schema of the database.
-* Verify the database is in sync with the model classes it was generated from. If they aren't in sync, EF throws an exception. This makes it easier to find inconsistent database/code issues.
+* Verifies the database is in sync with the model classes it was generated from. If they aren't in sync, EF throws an exception. This makes it easier to find inconsistent database/code issues.
 
 ## Add a Rating Property to the Movie Model
 
@@ -27,12 +27,28 @@ Add a `Rating` property to *Models/Movie.cs*:
 
 [!code-csharp[](~/tutorials/first-mvc-app/start-mvc/sample/MvcMovie22/Models/MovieDateRating.cs?highlight=13&name=snippet)]
 
-Build the app (Ctrl+Shift+B).
+Build the app
+
+### [Visual Studio](#tab/visual-studio)
+
+ Ctrl+Shift+B
+
+### [Visual Studio Code](#tab/visual-studio-code)
+
+```dotnetcli
+dotnet build
+```
+
+### [Visual Studio for Mac](#tab/visual-studio-mac)
+
+Command ⌘ + B
+
+------
 
 Because you've added a new field to the `Movie` class, you need to update the binding white list so this new property will be included. In *MoviesController.cs*, update the `[Bind]` attribute for both the `Create` and `Edit` action methods to include the `Rating` property:
 
 ```csharp
-[Bind("ID,Title,ReleaseDate,Genre,Price,Rating")]
+[Bind("Id,Title,ReleaseDate,Genre,Price,Rating")]
    ```
 
 Update the view templates in order to display, create, and edit the new `Rating` property in the browser view.
@@ -43,18 +59,19 @@ Edit the */Views/Movies/Index.cshtml* file and add a `Rating` field:
 
 Update the */Views/Movies/Create.cshtml* with a `Rating` field.
 
-<!-- VS -------------------------->
 # [Visual Studio / Visual Studio for Mac](#tab/visual-studio+visual-studio-mac)
 
 You can copy/paste the previous "form group" and let intelliSense help you update the fields. IntelliSense works with [Tag Helpers](xref:mvc/views/tag-helpers/intro).
 
 ![The developer has typed the letter R for the attribute value of asp-for in the second label element of the view. An Intellisense contextual menu has appeared showing the available fields, including Rating, which is highlighted in the list automatically. When the developer clicks the field or presses Enter on the keyboard, the value will be set to Rating.](new-field/_static/cr.png)
 
-<!-- Code -------------------------->
 # [Visual Studio Code](#tab/visual-studio-code)
+
 <!-- This tab intentionally left blank. -->
----  
-<!-- End of VS tabs -->
+
+---
+
+Update the remaining templates.
 
 Update the `SeedData` class so that it provides a value for the new column. A sample change is shown below, but you'll want to make this change for each `new Movie`.
 
@@ -76,7 +93,6 @@ There are a few approaches to resolving the error:
 
 For this tutorial, Code First Migrations is used.
 
-<!-- VS -------------------------->
 # [Visual Studio](#tab/visual-studio)
 
 From the **Tools** menu, select **NuGet Package Manager > Package Manager Console**.
@@ -92,26 +108,28 @@ Update-Database
 
 The `Add-Migration` command tells the migration framework to examine the current `Movie` model with the current `Movie` DB schema and create the necessary code to migrate the DB to the new model.
 
-# [Visual Studio Code / Visual Studio for Mac](#tab/visual-studio-code+visual-studio-mac)
-
-[!INCLUDE[](~/includes/RP-mvc-shared/sqlite-warn.md)]
-
-Run the following command:
-
-```cli
-dotnet ef migrations add Rating
-dotnet ef database update
-```
-
----  
-<!-- End of VS tabs -->
-
 The name "Rating" is arbitrary and is used to name the migration file. It's helpful to use a meaningful name for the migration file.
 
 If all the records in the DB are deleted, the initialize method will seed the DB and include the `Rating` field.
 
-Run the app and verify you can create/edit/display movies with a `Rating` field. You should add the `Rating` field to the `Edit`, `Details`, and `Delete` view templates.
+# [Visual Studio Code / Visual Studio for Mac](#tab/visual-studio-code+visual-studio-mac)
+
+[!INCLUDE[](~/includes/RP-mvc-shared/sqlite-warn.md)]
+
+Delete the database and use migrations to re-create the database. To delete the database, delete the database file (*MvcMovie.db*). Then run the `ef database update` command:
+
+```dotnetcli
+dotnet ef database update
+```
+
+---
+<!-- End of VS tabs -->
+
+Run the app and verify you can create, edit, and display movies with a `Rating` field. Update the app:
+
+* Add the `Rating` field to the `Edit`, `Details`, and `Delete` view templates.
+* Update the binding in the edit action method of the `MoviesController`.
 
 > [!div class="step-by-step"]
 > [Previous](search.md)
-> [Next](validation.md)  
+> [Next](validation.md)

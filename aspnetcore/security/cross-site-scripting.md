@@ -103,10 +103,10 @@ This will produce the following HTML
 
 Which, when it runs, will render the following:
 
-```none
+```
 <"123">
    <"123">
-   ```
+```
 
 You can also call the JavaScript encoder directly:
 
@@ -121,15 +121,15 @@ You can also call the JavaScript encoder directly:
    <script>
        document.write("@encoder.Encode(untrustedInput)");
    </script>
-   ```
+```
 
 This will render in the browser as follows:
 
 ```html
 <script>
-       document.write("\u003C\u0022123\u0022\u003E");
-   </script>
-   ```
+    document.write("\u003C\u0022123\u0022\u003E");
+</script>
+```
 
 >[!WARNING]
 > Don't concatenate untrusted input in JavaScript to create DOM elements. You should use `createElement()` and assign property values appropriately such as `node.TextContent=`, or use `element.SetAttribute()`/`element[attribute]=` otherwise you expose yourself to DOM-based XSS.
@@ -208,7 +208,7 @@ This example widens the safe list to include the Unicode Range CjkUnifiedIdeogra
 <p>This link text is in Chinese: <a href="/">汉语/漢語</a></p>
    ```
 
-Safe list ranges are specified as Unicode code charts, not languages. The [Unicode standard](http://unicode.org/) has a list of [code charts](http://www.unicode.org/charts/index.html) you can use to find the chart containing your characters. Each encoder, Html, JavaScript and Url, must be configured separately.
+Safe list ranges are specified as Unicode code charts, not languages. The [Unicode standard](https://unicode.org/) has a list of [code charts](https://www.unicode.org/charts/index.html) you can use to find the chart containing your characters. Each encoder, Html, JavaScript and Url, must be configured separately.
 
 > [!NOTE]
 > Customization of the safe list only affects encoders sourced via DI. If you directly access an encoder via `System.Text.Encodings.Web.*Encoder.Default` then the default, Basic Latin only safelist will be used.

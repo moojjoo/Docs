@@ -80,7 +80,7 @@ Run your app and ensure that you can scan the QR code and validate the code the 
 
 ::: moniker range=">= aspnetcore-2.1"
 
-The site name in the QR Code is taken from the project name you choose when initially creating your project. You can change it by looking for the `GenerateQrCodeUri(string email, string unformattedKey)` method in the */Areas/Identity/Pages/Account/Manage/EnableAuthenticator.cshtml*.
+The site name in the QR Code is taken from the project name you choose when initially creating your project. You can change it by looking for the `GenerateQrCodeUri(string email, string unformattedKey)` method in the */Areas/Identity/Pages/Account/Manage/EnableAuthenticator.cshtml.cs*.
 
 ::: moniker-end
 
@@ -98,7 +98,7 @@ The default code from the template looks as follows:
 private string GenerateQrCodeUri(string email, string unformattedKey)
 {
     return string.Format(
-        AuthenicatorUriFormat,
+        AuthenticatorUriFormat,
         _urlEncoder.Encode("Razor Pages"),
         _urlEncoder.Encode(email),
         unformattedKey);

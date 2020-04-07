@@ -1,6 +1,26 @@
 {
     "redirections": [
         {
+            "source_path": "aspnet/core/client-side/bower.md",
+            "redirect_url": "/aspnet/core/client-side/libman/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/tutorials/grpc/grpc-client.md",
+            "redirect_url": "/aspnet/core/tutorials/grpc/grpc-start",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/tutorials/grpc/index.md",
+            "redirect_url": "/aspnet/core/tutorials/grpc/grpc-start",
+            "redirect_document_id": false
+        },        
+        {
+            "source_path": "aspnetcore/fundamentals/host/index.md",
+            "redirect_url": "/aspnet/core/fundamentals/index#host",
+            "redirect_document_id": false
+        },
+        {
             "source_path": "aspnetcore/tutorials/first-mvc-app-xplat/index.md",
             "redirect_url": "/aspnet/core/tutorials/first-mvc-app",
             "redirect_document_id": false
@@ -48,6 +68,11 @@
         {
             "source_path": "aspnetcore/tutorials/first-mvc-app-xplat/validation.md",
             "redirect_url": "/aspnet/core/tutorials/first-mvc-app/validation",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/tutorials/first-mvc-app-mac/start-mvc.md",
+            "redirect_url": "/aspnet/core/tutorials/first-mvc-app/index",
             "redirect_document_id": false
         },
         {
@@ -192,7 +217,12 @@
         }, 
         {   
             "source_path": "aspnetcore/data/index.md", 
-            "redirect_url": "/aspnet/core/data/ef-rp", 
+            "redirect_url": "/aspnet/core/data/ef-rp/intro", 
+            "redirect_document_id": false 
+        }, 
+        {   
+            "source_path": "aspnetcore/data/ef-rp/index.md", 
+            "redirect_url": "/aspnet/core/data/ef-rp/intro", 
             "redirect_document_id": false 
         }, 
         {   
@@ -204,12 +234,7 @@
             "source_path": "aspnetcore/azure/index.md", 
             "redirect_url": "/aspnet/core/azure/devops", 
             "redirect_document_id": false 
-        }, 
-        {   
-            "source_path": "aspnetcore/security/authentication/index.md", 
-            "redirect_url": "/aspnet/core/security/authentication/identity", 
-            "redirect_document_id": false 
-        }, 
+        },         
         {   
             "source_path": "aspnetcore/security/authorization/index.md", 
             "redirect_url": "/aspnet/core/security/authorization/introduction", 
@@ -511,6 +536,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path": "aspnetcore/security/authentication/azure-ad-b2c-webapi.md",
+            "redirect_url": "/aspnet/core/security/authentication/azure-active-directory",
+            "redirect_document_id": false
+        },
+        {
             "source_path": "aspnetcore/security/authentication/facebook-logins.md",
             "redirect_url": "/aspnet/core/security/authentication/social/facebook-logins",
             "redirect_document_id": false
@@ -692,12 +722,17 @@
         },
         {
             "source_path": "aspnetcore/tutorials/razor-pages/uploading-files.md",
-            "redirect_url": "/aspnet/core/razor-pages/upload-files",
+            "redirect_url": "/aspnet/core/mvc/models/file-uploads",
             "redirect_document_id": false
         },
         {
             "source_path": "aspnet/mvc/overview/getting-started/introduction/sample/code-location.md",
             "redirect_url": "/aspnet/mvc/overview/getting-started/introduction/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnet/mvc/overview/getting-started/database-first-development/publish-to-azure.md",
+            "redirect_url": "/azure/app-service/app-service-web-tutorial-dotnet-sqldatabase",
             "redirect_document_id": false
         },
         {
@@ -707,7 +742,7 @@
         },
         {
             "source_path": "aspnetcore/security/authentication/identity-primary-key-configuration.md",
-            "redirect_url": "/aspnet/core/security/authentication/customize_identity_model#change-the-primary-key-type",
+            "redirect_url": "/aspnet/core/security/authentication/customize-identity-model#change-the-primary-key-type",
             "redirect_document_id": false
         },
         {
@@ -728,6 +763,161 @@
         {
             "source_path": "aspnetcore/fundamentals/servers/aspnet-core-module.md",
             "redirect_url": "/aspnet/core/host-and-deploy/aspnet-core-module",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/spa/index.md",
+            "redirect_url": "/aspnet/core/blazor/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/index.md",
+            "redirect_url": "/aspnet/core/blazor/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/less-sass-fa.md",
+            "redirect_url": "https://fontawesome.com/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/index.md",
+            "redirect_url": "/aspnet/core/blazor/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/spa/blazor/index.md",
+            "redirect_url": "/aspnet/core/blazor/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/get-started.md",
+            "redirect_url": "/aspnet/core/blazor/get-started",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/spa/blazor/get-started.md",
+            "redirect_url": "/aspnet/core/blazor/get-started",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/hosting-models.md",
+            "redirect_url": "/aspnet/core/blazor/hosting-models",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/components.md",
+            "redirect_url": "/aspnet/core/blazor/components",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/forms-validation.md",
+            "redirect_url": "/aspnet/core/blazor/forms-validation",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/class-libraries.md",
+            "redirect_url": "/aspnet/core/blazor/class-libraries",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/layouts.md",
+            "redirect_url": "/aspnet/core/blazor/layouts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/dependency-injection.md",
+            "redirect_url": "/aspnet/core/blazor/dependency-injection",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/routing.md",
+            "redirect_url": "/aspnet/core/blazor/routing",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/javascript-interop.md",
+            "redirect_url": "/aspnet/core/blazor/javascript-interop",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-components/debug.md",
+            "redirect_url": "/aspnet/core/blazor/debug",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/razor-components-blazor/index.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/blazor/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/razor-components-blazor/blazor.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/blazor/client-side",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/razor-components-blazor/razor-components.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/blazor/server-side",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/razor-components-blazor/configure-linker.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/blazor/configure-linker",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/using-gulp.md",
+            "redirect_url": "/aspnet/core/client-side/using-grunt",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/tutorials/build-your-first-razor-components-app.md",
+            "redirect_url": "/aspnet/core/tutorials/build-your-first-blazor-app",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/iis/troubleshoot.md",
+            "redirect_url": "/aspnet/core/test/troubleshoot-azure-iis",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/azure-apps/troubleshoot.md",
+            "redirect_url": "/aspnet/core/test/troubleshoot-azure-iis",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/tutorials/web-api-jquery.md",
+            "redirect_url": "/aspnet/core/tutorials/web-api-javascript",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/migration/index.md",
+            "redirect_url": "/aspnet/core/migration/proper-to-2x/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/security/blazor/server-side.md",
+            "redirect_url": "/aspnet/core/security/blazor/server",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/blazor/client-side.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/blazor/webassembly",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/blazor/server-side.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/blazor/server",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/razor-pages/upload-files.md",
+            "redirect_url": "/aspnet/core/mvc/models/file-uploads",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/javascript-interop.md",
+            "redirect_url": "/aspnet/core/blazor/call-javascript-from-dotnet",
             "redirect_document_id": false
         }
     ]

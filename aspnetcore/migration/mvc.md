@@ -3,7 +3,7 @@ title: Migrate from ASP.NET MVC to ASP.NET Core MVC
 author: ardalis
 description: Learn how to get started migrating an ASP.NET MVC project to ASP.NET Core MVC.
 ms.author: riande
-ms.date: 03/07/2017
+ms.date: 04/06/2019
 uid: migration/mvc
 ---
 # Migrate from ASP.NET MVC to ASP.NET Core MVC
@@ -39,7 +39,7 @@ Create a new *empty* ASP.NET Core web app with the same name as the previous pro
 
 ::: moniker range=">= aspnetcore-2.1"
 
-* When targeting .NET Core, the [Microsoft.AspNetCore.App metapackage](xref:fundamentals/metapackage-app) is referenced by default. This package contains packages commonly used packages by MVC apps. If targeting .NET Framework, package references must be listed individually in the project file.
+* When targeting .NET Core, the [Microsoft.AspNetCore.App metapackage](xref:fundamentals/metapackage-app) is referenced by default. This package contains packages commonly used by MVC apps. If targeting .NET Framework, package references must be listed individually in the project file.
 
 ::: moniker-end
 
@@ -198,5 +198,5 @@ ASP.NET Core converts unhandled exceptions in a web app into HTTP 500 error resp
 
 ## Additional resources
 
-* [Client-side development](xref:client-side/index)
-* [Tag Helpers](xref:mvc/views/tag-helpers/intro)
+* <xref:blazor/index>
+* <xref:mvc/views/tag-helpers/intro>

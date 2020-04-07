@@ -1,15 +1,14 @@
 ---
 title: IIS modules with ASP.NET Core
-author: guardrex
+author: rick-anderson
 description: Discover active and inactive IIS modules for ASP.NET Core apps and how to manage IIS modules.
+monikerRange: '>= aspnetcore-2.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 01/17/2019
+ms.date: 01/13/2020
 uid: host-and-deploy/iis/modules
 ---
 # IIS modules with ASP.NET Core
-
-By [Luke Latham](https://github.com/guardrex)
 
 Some of the native IIS modules and all of the IIS managed modules aren't able to process requests for ASP.NET Core apps. In many cases, ASP.NET Core offers an alternative to the scenarios addressed by IIS native and managed modules.
 
@@ -24,17 +23,18 @@ The table indicates native IIS modules that are functional with ASP.NET Core app
 | **Client Certification Mapping Authentication**<br>`CertificateMappingAuthenticationModule`      | Yes | |
 | **CGI**<br>`CgiModule`                                                                           | No  | |
 | **Configuration Validation**<br>`ConfigurationValidationModule`                                  | Yes | |
-| **HTTP Errors**<br>`CustomErrorModule`                                                           | No  | [Status Code Pages Middleware](xref:fundamentals/error-handling#configure-status-code-pages) |
+| **HTTP Errors**<br>`CustomErrorModule`                                                           | No  | [Status Code Pages Middleware](xref:fundamentals/error-handling#usestatuscodepages) |
 | **Custom Logging**<br>`CustomLoggingModule`                                                      | Yes | |
 | **Default Document**<br>`DefaultDocumentModule`                                                  | No  | [Default Files Middleware](xref:fundamentals/static-files#serve-a-default-document) |
 | **Digest Authentication**<br>`DigestAuthenticationModule`                                        | Yes | |
 | **Directory Browsing**<br>`DirectoryListingModule`                                               | No  | [Directory Browsing Middleware](xref:fundamentals/static-files#enable-directory-browsing) |
 | **Dynamic Compression**<br>`DynamicCompressionModule`                                            | Yes | [Response Compression Middleware](xref:performance/response-compression) |
-| **Tracing**<br>`FailedRequestsTracingModule`                                                     | Yes | [ASP.NET Core Logging](xref:fundamentals/logging/index#tracesource-provider) |
+| **Failed Requests Tracing**<br>`FailedRequestsTracingModule`                                     | Yes | [ASP.NET Core Logging](xref:fundamentals/logging/index#tracesource-provider) |
 | **File Caching**<br>`FileCacheModule`                                                            | No  | [Response Caching Middleware](xref:performance/caching/middleware) |
 | **HTTP Caching**<br>`HttpCacheModule`                                                            | No  | [Response Caching Middleware](xref:performance/caching/middleware) |
 | **HTTP Logging**<br>`HttpLoggingModule`                                                          | Yes | [ASP.NET Core Logging](xref:fundamentals/logging/index) |
 | **HTTP Redirection**<br>`HttpRedirectionModule`                                                  | Yes | [URL Rewriting Middleware](xref:fundamentals/url-rewriting) |
+| **HTTP Tracing**<br>`TracingModule`                                                              | Yes | |
 | **IIS Client Certificate Mapping Authentication**<br>`IISCertificateMappingAuthenticationModule` | Yes | |
 | **IP and Domain Restrictions**<br>`IpRestrictionModule`                                          | Yes | |
 | **ISAPI Filters**<br>`IsapiFilterModule`                                                         | Yes | [Middleware](xref:fundamentals/middleware/index) |
@@ -116,7 +116,7 @@ If opting to remove a module with a setting in *web.config*, unlock the module a
     </system.webServer>
    </configuration>
    ```
-   
+
 In order to add or remove modules for IIS Express using *web.config*, modify *applicationHost.config* to unlock the `<modules>` section:
 
 1. Open *{APPLICATION ROOT}\\.vs\config\applicationhost.config*.
@@ -124,17 +124,17 @@ In order to add or remove modules for IIS Express using *web.config*, modify *ap
 1. Locate the `<section>` element for IIS modules and change `overrideModeDefault` from `Deny` to `Allow`:
 
    ```xml
-   <section name="modules" 
-            allowDefinition="MachineToApplication" 
+   <section name="modules"
+            allowDefinition="MachineToApplication"
             overrideModeDefault="Allow" />
    ```
-   
+
 1. Locate the `<location path="" overrideMode="Allow"><system.webServer><modules>` section. For any modules that you wish to remove, set `lockItem` from `true` to `false`. In the following example, the CGI Module is unlocked:
 
    ```xml
    <add name="CgiModule" lockItem="false" />
    ```
-   
+
 1. After the `<modules>` section and individual modules are unlocked, you're free to add or remove IIS modules using the app's *web.config* file for running the app on IIS Express.
 
 An IIS module can also be removed with *Appcmd.exe*. Provide the `MODULE_NAME` and `APPLICATION_NAME` in the command:
@@ -159,8 +159,7 @@ The HTTP Caching Module (`HttpCacheModule`) implements the IIS output cache and 
 
 ## Additional resources
 
-* <xref:host-and-deploy/iis/index>
 * [Introduction to IIS Architectures: Modules in IIS](/iis/get-started/introduction-to-iis/introduction-to-iis-architecture#modules-in-iis)
 * [IIS Modules Overview](/iis/get-started/introduction-to-iis/iis-modules-overview)
 * [Customizing IIS 7.0 Roles and Modules](https://technet.microsoft.com/library/cc627313.aspx)
-* [IIS `<system.webServer>`](/iis/configuration/system.webServer/)
+* [IIS \<system.webServer>](/iis/configuration/system.webServer/)

@@ -45,13 +45,13 @@ From a command shell, download the code, build the project, and run it as follow
 
 3. Restore the packages, and build the solution.
 
-    ```console
+    ```dotnetcli
     dotnet build
     ```
 
 4. Run the app.
 
-    ```console
+    ```dotnetcli
     dotnet run
     ```
 
@@ -187,6 +187,7 @@ Deployment slots support the staging of changes without impacting the app runnin
     ```console
     git commit -a -m "upgraded to V3"
     ```
+
 5. Using the local machine's command shell, add the staging deployment URL as a Git remote and push the committed changes:
 
     a. Add the remote URL for staging to the local Git repository.

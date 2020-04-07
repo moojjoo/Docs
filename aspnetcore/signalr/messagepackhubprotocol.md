@@ -5,10 +5,10 @@ description: Add MessagePack Hub Protocol to ASP.NET Core SignalR.
 monikerRange: '>= aspnetcore-2.1'
 ms.author: bradyg
 ms.custom: mvc
-ms.date: 06/04/2018
+ms.date: 11/12/2019
+no-loc: [SignalR]
 uid: signalr/messagepackhubprotocol
 ---
-
 # Use MessagePack Hub Protocol in SignalR for ASP.NET Core
 
 By [Brennan Conroy](https://github.com/BrennanConroy)
@@ -44,6 +44,18 @@ services.AddSignalR()
     });
 ```
 
+> [!WARNING]
+> We strongly recommend reviewing [CVE-2020-5234](https://github.com/neuecc/MessagePack-CSharp/security/advisories/GHSA-7q36-4xx7-xcxf) and applying the recommended patches. For example, setting the `MessagePackSecurity.Active` static property to `MessagePackSecurity.UntrustedData`. Setting the `MessagePackSecurity.Active` requires manually installing a [1.9.x version of MessagePack](https://www.nuget.org/packages/MessagePack/1.9.3). Installing `MessagePack` 1.9.x upgrades the version SignalR uses. When `MessagePackSecurity.Active` is not set to `MessagePackSecurity.UntrustedData`, a malicious client could cause a denial of service. Set `MessagePackSecurity.Active` in `Program.Main`, as shown in the following code:
+
+```csharp
+public static void Main(string[] args)
+{
+  MessagePackSecurity.Active = MessagePackSecurity.UntrustedData;
+
+  CreateHostBuilder(args).Build().Run();
+}
+```
+
 ## Configure MessagePack on the client
 
 > [!NOTE]
@@ -65,13 +77,41 @@ var hubConnection = new HubConnectionBuilder()
 
 ### JavaScript client
 
-MessagePack support for the Javascript client is provided by the `@aspnet/signalr-protocol-msgpack` NPM package.
+::: moniker range=">= aspnetcore-3.0"
+
+MessagePack support for the JavaScript client is provided by the `@microsoft/signalr-protocol-msgpack` npm package. Install the package by executing the following command in a command shell:
+
+```console
+npm install @microsoft/signalr-protocol-msgpack
+```
+
+::: moniker-end
+
+::: moniker range="< aspnetcore-3.0"
+
+MessagePack support for the JavaScript client is provided by the `@aspnet/signalr-protocol-msgpack` npm package. Install the package by executing the following command in a command shell:
 
 ```console
 npm install @aspnet/signalr-protocol-msgpack
 ```
 
-After installing the npm package, the module can be used directly via a JavaScript module loader or imported into the browser by referencing the *node_modules\\@aspnet\signalr-protocol-msgpack\dist\browser\signalr-protocol-msgpack.js* file. In a browser, the `msgpack5` library must also be referenced. Use a `<script>` tag to create a reference. The library can be found at *node_modules\msgpack5\dist\msgpack5.js*.
+::: moniker-end
+
+After installing the npm package, the module can be used directly via a JavaScript module loader or imported into the browser by referencing the following file:
+
+::: moniker range=">= aspnetcore-3.0"
+
+*node_modules\\@microsoft\signalr-protocol-msgpack\dist\browser\signalr-protocol-msgpack.js* 
+
+::: moniker-end
+
+::: moniker range="< aspnetcore-3.0"
+
+*node_modules\\@aspnet\signalr-protocol-msgpack\dist\browser\signalr-protocol-msgpack.js* 
+
+::: moniker-end
+
+In a browser, the `msgpack5` library must also be referenced. Use a `<script>` tag to create a reference. The library can be found at *node_modules\msgpack5\dist\msgpack5.js*.
 
 > [!NOTE]
 > When using the `<script>` element, the order is important. If *signalr-protocol-msgpack.js* is referenced before *msgpack5.js*, an error occurs when trying to connect with MessagePack. *signalr.js* is also required before *signalr-protocol-msgpack.js*.
@@ -93,6 +133,74 @@ const connection = new signalR.HubConnectionBuilder()
 
 > [!NOTE]
 > At this time, there are no configuration options for the MessagePack protocol on the JavaScript client.
+
+## MessagePack quirks
+
+There are a few issues to be aware of when using the MessagePack Hub Protocol.
+
+### MessagePack is case-sensitive
+
+The MessagePack protocol is case-sensitive. For example, consider the following C# class:
+
+```csharp
+public class ChatMessage
+{
+    public string Sender { get; }
+    public string Message { get; }
+}
+```
+
+When sending from the JavaScript client, you must use `PascalCased` property names, since the casing must match the C# class exactly. For example:
+
+```javascript
+connection.invoke("SomeMethod", { Sender: "Sally", Message: "Hello!" });
+```
+
+Using `camelCased` names won't properly bind to the C# class. You can work around this by using the `Key` attribute to specify a different name for the MessagePack property. For more information, see [the MessagePack-CSharp documentation](https://github.com/neuecc/MessagePack-CSharp#object-serialization).
+
+### DateTime.Kind is not preserved when serializing/deserializing
+
+The MessagePack protocol doesn't provide a way to encode the `Kind` value of a `DateTime`. As a result, when deserializing a date, the MessagePack Hub Protocol assumes the incoming date is in UTC format. If you're working with `DateTime` values in local time, we recommend converting to UTC before sending them. Convert them from UTC to local time when you receive them.
+
+For more information on this limitation, see GitHub issue [aspnet/SignalR#2632](https://github.com/aspnet/SignalR/issues/2632).
+
+### DateTime.MinValue is not supported by MessagePack in JavaScript
+
+The [msgpack5](https://github.com/mcollina/msgpack5) library used by the SignalR JavaScript client doesn't support the `timestamp96` type in MessagePack. This type is used to encode very large date values (either very early in the past or very far in the future). The value of `DateTime.MinValue` is `January 1, 0001` which must be encoded in a `timestamp96` value. Because of this, sending `DateTime.MinValue` to a JavaScript client isn't supported. When `DateTime.MinValue` is received by the JavaScript client, the following error is thrown:
+
+```
+Uncaught Error: unable to find ext type 255 at decoder.js:427
+```
+
+Usually, `DateTime.MinValue` is used to encode a "missing" or `null` value. If you need to encode that value in MessagePack, use a nullable `DateTime` value (`DateTime?`) or encode a separate `bool` value indicating if the date is present.
+
+For more information on this limitation, see GitHub issue [aspnet/SignalR#2228](https://github.com/aspnet/SignalR/issues/2228).
+
+### MessagePack support in "ahead-of-time" compilation environment
+
+The [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp/tree/v1.8) library used by the .NET client and server uses code generation to optimize serialization. As a result, it isn't supported by default on environments that use "ahead-of-time" compilation (such as Xamarin iOS or Unity). It's possible to use MessagePack in these environments by "pre-generating" the serializer/deserializer code. For more information, see [the MessagePack-CSharp documentation](https://github.com/neuecc/MessagePack-CSharp/tree/v1.8#pre-code-generationunityxamarin-supports). Once you have pre-generated the serializers, you can register them using the configuration delegate passed to `AddMessagePackProtocol`:
+
+```csharp
+services.AddSignalR()
+    .AddMessagePackProtocol(options =>
+    {
+        options.FormatterResolvers = new List<MessagePack.IFormatterResolver>()
+        {
+            MessagePack.Resolvers.GeneratedResolver.Instance,
+            MessagePack.Resolvers.StandardResolver.Instance
+        };
+    });
+```
+
+### Type checks are more strict in MessagePack
+
+The JSON Hub Protocol will perform type conversions during deserialization. For example, if the incoming object has a property value that is a number (`{ foo: 42 }`) but the property on the .NET class is of type `string`, the value will be converted. However, MessagePack doesn't perform this conversion and will throw an exception that can be seen in server-side logs (and in the console):
+
+```
+InvalidDataException: Error binding arguments. Make sure that the types of the provided values match the types of the hub method being invoked.
+```
+
+For more information on this limitation, see GitHub issue [aspnet/SignalR#2937](https://github.com/aspnet/SignalR/issues/2937).
 
 ## Related resources
 

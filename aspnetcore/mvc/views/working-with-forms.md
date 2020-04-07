@@ -4,12 +4,12 @@ author: rick-anderson
 description: Describes the built-in Tag Helpers used with Forms.
 ms.author: riande
 ms.custom: mvc
-ms.date: 1/11/2019
+ms.date: 12/05/2019
 uid: mvc/views/working-with-forms
 ---
 # Tag Helpers in forms in ASP.NET Core
 
-By [Rick Anderson](https://twitter.com/RickAndMSFT), [Dave Paquette](https://twitter.com/Dave_Paquette), and [Jerrie Pelser](https://github.com/jerriep)
+By [Rick Anderson](https://twitter.com/RickAndMSFT), [N. Taylor Mullen](https://github.com/NTaylorMullen), [Dave Paquette](https://twitter.com/Dave_Paquette), and [Jerrie Pelser](https://github.com/jerriep)
 
 This document demonstrates working with Forms and the HTML elements commonly used on a Form. The HTML [Form](https://www.w3.org/TR/html401/interact/forms.html) element provides the primary mechanism web apps use to post back data to the server. Most of this document describes [Tag Helpers](tag-helpers/intro.md) and how they can help you productively create robust HTML forms. We recommend you read [Introduction to Tag Helpers](tag-helpers/intro.md) before you read this document.
 
@@ -35,10 +35,10 @@ Sample:
 
 The Form Tag Helper above generates the following HTML:
 
-```HTML
+```html
 <form method="post" action="/Demo/Register">
     <!-- Input and Submit elements -->
-    <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+    <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
 </form>
 ```
 
@@ -61,14 +61,106 @@ Many of the views in the *Views/Account* folder (generated when you create a new
 >[!NOTE]
 >With the built in templates, `returnUrl` is only populated automatically when you try to access an authorized resource but are not authenticated or authorized. When you attempt an unauthorized access, the security middleware redirects you to the login page with the `returnUrl` set.
 
+## The Form Action Tag Helper
+
+The Form Action Tag Helper generates the `formaction` attribute on the generated `<button ...>` or `<input type="image" ...>` tag. The `formaction` attribute controls where a form submits its data. It binds to [\<input>](https://www.w3.org/wiki/HTML/Elements/input) elements of type `image` and [\<button>](https://www.w3.org/wiki/HTML/Elements/button) elements. The Form Action Tag Helper enables the usage of several [AnchorTagHelper](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper) `asp-` attributes to control what `formaction` link is generated for the corresponding element.
+
+Supported [AnchorTagHelper](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper) attributes to control the value of `formaction`:
+
+|Attribute|Description|
+|---|---|
+|[asp-controller](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-controller)|The name of the controller.|
+|[asp-action](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-action)|The name of the action method.|
+|[asp-area](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-area)|The name of the area.|
+|[asp-page](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-page)|The name of the Razor page.|
+|[asp-page-handler](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-page-handler)|The name of the Razor page handler.|
+|[asp-route](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-route)|The name of the route.|
+|[asp-route-{value}](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-route-value)|A single URL route value. For example, `asp-route-id="1234"`.|
+|[asp-all-route-data](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-all-route-data)|All route values.|
+|[asp-fragment](xref:mvc/views/tag-helpers/builtin-th/anchor-tag-helper#asp-fragment)|The URL fragment.|
+
+### Submit to controller example
+
+The following markup submits the form to the `Index` action of `HomeController` when the input or button are selected:
+
+```cshtml
+<form method="post">
+    <button asp-controller="Home" asp-action="Index">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" asp-controller="Home" 
+                                asp-action="Index">
+</form>
+```
+
+The previous markup generates following HTML:
+
+```html
+<form method="post">
+    <button formaction="/Home">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" formaction="/Home">
+</form>
+```
+
+### Submit to page example
+
+The following markup submits the form to the `About` Razor Page:
+
+```cshtml
+<form method="post">
+    <button asp-page="About">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" asp-page="About">
+</form>
+```
+
+The previous markup generates following HTML:
+
+```html
+<form method="post">
+    <button formaction="/About">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" formaction="/About">
+</form>
+```
+
+### Submit to route example
+
+Consider the `/Home/Test` endpoint:
+
+```csharp
+public class HomeController : Controller
+{
+    [Route("/Home/Test", Name = "Custom")]
+    public string Test()
+    {
+        return "This is the test page";
+    }
+}
+```
+
+The following markup submits the form to the `/Home/Test` endpoint.
+
+```cshtml
+<form method="post">
+    <button asp-route="Custom">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" asp-route="Custom">
+</form>
+```
+
+The previous markup generates following HTML:
+
+```html
+<form method="post">
+    <button formaction="/Home/Test">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" formaction="/Home/Test">
+</form>
+```
+
 ## The Input Tag Helper
 
 The Input Tag Helper binds an HTML [\<input>](https://www.w3.org/wiki/HTML/Elements/input) element to a model expression in your razor view.
 
 Syntax:
 
-```HTML
-<input asp-for="<Expression Name>" />
+```cshtml
+<input asp-for="<Expression Name>">
 ```
 
 The Input Tag Helper:
@@ -85,7 +177,7 @@ The Input Tag Helper:
 
 * Provides strong typing. If the name of the property changes and you don't update the Tag Helper you'll get an error similar to the following:
 
-```HTML
+```
 An error occurred during the compilation of a resource required to process
 this request. Please review the following specific error details and modify
 your source code appropriately.
@@ -107,9 +199,7 @@ The `Input` Tag Helper sets the HTML `type` attribute based on the .NET type. Th
 |Int|type="number"|
 |Single, Double|type="number"|
 
-
 The following table shows some common [data annotations](/dotnet/api/microsoft.aspnetcore.mvc.dataannotations.iattributeadapter) attributes that the input tag helper will map to specific input types (not every validation attribute is listed):
-
 
 |Attribute|Input Type|
 |---|---|
@@ -117,10 +207,9 @@ The following table shows some common [data annotations](/dotnet/api/microsoft.a
 |[Url]|type="url"|
 |[HiddenInput]|type="hidden"|
 |[Phone]|type="tel"|
-|[DataType(DataType.Password)]|	type="password"|
-|[DataType(DataType.Date)]|	type="date"|
-|[DataType(DataType.Time)]|	type="time"|
-
+|[DataType(DataType.Password)]|type="password"|
+|[DataType(DataType.Date)]|type="date"|
+|[DataType(DataType.Time)]|type="time"|
 
 Sample:
 
@@ -130,19 +219,19 @@ Sample:
 
 The code above generates the following HTML:
 
-```HTML
+```html
   <form method="post" action="/Demo/RegisterInput">
-       Email:
-       <input type="email" data-val="true"
-              data-val-email="The Email Address field is not a valid email address."
-              data-val-required="The Email Address field is required."
-              id="Email" name="Email" value="" /> <br>
-       Password:
-       <input type="password" data-val="true"
-              data-val-required="The Password field is required."
-              id="Password" name="Password" /><br>
-       <button type="submit">Register</button>
-     <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+      Email:
+      <input type="email" data-val="true"
+             data-val-email="The Email Address field is not a valid email address."
+             data-val-required="The Email Address field is required."
+             id="Email" name="Email" value=""><br>
+      Password:
+      <input type="password" data-val="true"
+             data-val-required="The Password field is required."
+             id="Password" name="Password"><br>
+      <button type="submit">Register</button>
+      <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
    </form>
 ```
 
@@ -156,7 +245,7 @@ The data annotations applied to the `Email` and `Password` properties generate m
 
 `@Html.Editor()` and `@Html.EditorFor()` use a special `ViewDataDictionary` entry named `htmlAttributes` when executing their default templates. This behavior is optionally augmented using `additionalViewData` parameters. The key "htmlAttributes" is case-insensitive. The key "htmlAttributes" is handled similarly to the `htmlAttributes` object passed to input helpers like `@Html.TextBox()`.
 
-```HTML
+```cshtml
 @Html.EditorFor(model => model.YourProperty, 
   new { htmlAttributes = new { @class="myCssClass", style="Width:100px" } })
 ```
@@ -165,22 +254,23 @@ The data annotations applied to the `Email` and `Password` properties generate m
 
 The `asp-for` attribute value is a `ModelExpression` and the right hand side of a lambda expression. Therefore, `asp-for="Property1"` becomes `m => m.Property1` in the generated code which is why you don't need to prefix with `Model`. You can use the "\@" character to start an inline expression and move before the `m.`:
 
-```HTML
+```cshtml
 @{
-       var joe = "Joe";
-   }
-   <input asp-for="@joe" />
+  var joe = "Joe";
+}
+
+<input asp-for="@joe">
 ```
 
 Generates the following:
 
-```HTML
-<input type="text" id="joe" name="joe" value="Joe" />
+```html
+<input type="text" id="joe" name="joe" value="Joe">
 ```
 
 With collection properties, `asp-for="CollectionProperty[23].Member"` generates the same name as `asp-for="CollectionProperty[i].Member"` when `i` has the value `23`.
 
-When ASP.NET Core MVC calculates the value of `ModelExpression`, it inspects several sources, including `ModelState`. Consider `<input type="text" asp-for="@Name" />`. The calculated `value` attribute is the first non-null value from:
+When ASP.NET Core MVC calculates the value of `ModelExpression`, it inspects several sources, including `ModelState`. Consider `<input type="text" asp-for="@Name">`. The calculated `value` attribute is the first non-null value from:
 
 * `ModelState` entry with key "Name".
 * Result of the expression `Model.Name`.
@@ -199,8 +289,8 @@ In the view, we bind to `Address.AddressLine1`:
 
 The following HTML is generated for `Address.AddressLine1`:
 
-```HTML
-<input type="text" id="Address_AddressLine1" name="Address.AddressLine1" value="" />
+```html
+<input type="text" id="Address_AddressLine1" name="Address.AddressLine1" value="">
 ```
 
 ### Expression names and Collections
@@ -213,10 +303,10 @@ The action method:
 
 ```csharp
 public IActionResult Edit(int id, int colorIndex)
-   {
-       ViewData["Index"] = colorIndex;
-       return View(GetPerson(id));
-   }
+{
+    ViewData["Index"] = colorIndex;
+    return View(GetPerson(id));
+}
 ```
 
 The following Razor shows how you access a specific `Color` element:
@@ -264,7 +354,7 @@ Sample:
 
 The following HTML is generated:
 
-```HTML
+```html
 <form method="post" action="/Demo/RegisterTextArea">
   <textarea data-val="true"
    data-val-maxlength="The field Description must be a string or array type with a maximum length of &#x27;1024&#x27;."
@@ -274,13 +364,13 @@ The following HTML is generated:
    id="Description" name="Description">
   </textarea>
   <button type="submit">Test</button>
-  <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+  <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
 </form>
 ```
 
 ## The Label Tag Helper
 
-* Generates the label caption and `for` attribute on a [<label>](https://www.w3.org/wiki/HTML/Elements/label) element for an expression name
+* Generates the label caption and `for` attribute on a [\<label>](https://www.w3.org/wiki/HTML/Elements/label) element for an expression name
 
 * HTML Helper alternative: `Html.LabelFor`.
 
@@ -300,7 +390,7 @@ Sample:
 
 The following HTML is generated for the `<label>` element:
 
-```HTML
+```html
 <label for="Email">Email Address</label>
 ```
 
@@ -320,13 +410,13 @@ There are two Validation Tag Helpers. The `Validation Message Tag Helper` (which
 
 The `Validation Message Tag Helper`  is used with the `asp-validation-for` attribute on a HTML [span](https://developer.mozilla.org/docs/Web/HTML/Element/span) element.
 
-```HTML
+```cshtml
 <span asp-validation-for="Email"></span>
 ```
 
 The Validation Message Tag Helper will generate the following HTML:
 
-```HTML
+```html
 <span class="field-validation-valid"
   data-valmsg-for="Email"
   data-valmsg-replace="true"></span>
@@ -339,7 +429,7 @@ You generally use the `Validation Message Tag Helper`  after an `Input` Tag Help
 
 When a server side validation error occurs (for example when you have custom server side validation or client-side validation is disabled), MVC places that error message as the body of the `<span>` element.
 
-```HTML
+```html
 <span class="field-validation-error" data-valmsg-for="Email"
             data-valmsg-replace="true">
    The Email Address field is required.
@@ -362,7 +452,7 @@ The `Validation Summary Tag Helper`  is used to display a summary of validation 
 
 ### Sample
 
-In the following example, the data model is decorated with `DataAnnotation` attributes, which generates validation error messages on the `<input>` element.  When a validation error occurs, the Validation Tag Helper displays the error message:
+In the following example, the data model has `DataAnnotation` attributes, which generates validation error messages on the `<input>` element.  When a validation error occurs, the Validation Tag Helper displays the error message:
 
 [!code-csharp[](working-with-forms/sample/final/ViewModels/RegisterViewModel.cs)]
 
@@ -370,14 +460,14 @@ In the following example, the data model is decorated with `DataAnnotation` attr
 
 The generated HTML (when the model is valid):
 
-```HTML
+```html
 <form action="/DemoReg/Register" method="post">
   <div class="validation-summary-valid" data-valmsg-summary="true">
   <ul><li style="display:none"></li></ul></div>
   Email:  <input name="Email" id="Email" type="email" value=""
    data-val-required="The Email field is required."
    data-val-email="The Email field is not a valid email address."
-   data-val="true"> <br>
+   data-val="true"><br>
   <span class="field-validation-valid" data-valmsg-replace="true"
    data-valmsg-for="Email"></span><br>
   Password: <input name="Password" id="Password" type="password"
@@ -385,7 +475,7 @@ The generated HTML (when the model is valid):
   <span class="field-validation-valid" data-valmsg-replace="true"
    data-valmsg-for="Password"></span><br>
   <button type="submit">Register</button>
-  <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+  <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
 </form>
 ```
 
@@ -425,7 +515,7 @@ Which generates the following HTML (with "CA" selected):
        <option value="US">USA</option>
      </select>
        <br /><button type="submit">Register</button>
-     <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+     <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
    </form>
 ```
 
@@ -450,13 +540,13 @@ The `GetEnumSelectList` method generates a `SelectList` object for an enum.
 
 [!code-HTML[](../../mvc/views/working-with-forms/sample/final/Views/Home/IndexEnum.cshtml?highlight=5)]
 
-You can decorate your enumerator list with the `Display` attribute to get a richer UI:
+You can mark your enumerator list with the `Display` attribute to get a richer UI:
 
 [!code-csharp[](working-with-forms/sample/final/ViewModels/CountryEnum.cs?highlight=5,7)]
 
 The following HTML is generated:
 
-```HTML
+```html
   <form method="post" action="/Home/IndexEnum">
          <select data-val="true" data-val-required="The EnumCountry field is required."
                  id="EnumCountry" name="EnumCountry">
@@ -468,7 +558,7 @@ The following HTML is generated:
              <option selected="selected" value="5">Spain</option>
          </select>
          <br /><button type="submit">Register</button>
-         <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+         <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
     </form>
 ```
 
@@ -486,7 +576,7 @@ The two groups are shown below:
 
 The generated HTML:
 
-```HTML
+```html
  <form method="post" action="/Home/IndexGroup">
       <select id="Country" name="Country">
           <optgroup label="North America">
@@ -501,13 +591,13 @@ The generated HTML:
           </optgroup>
       </select>
       <br /><button type="submit">Register</button>
-      <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+      <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
  </form>
 ```
 
 ### Multiple select
 
-The Select Tag Helper  will automatically generate the [multiple = "multiple"](http://w3c.github.io/html-reference/select.html)  attribute if the property specified in the `asp-for` attribute is an `IEnumerable`. For example, given the following model:
+The Select Tag Helper  will automatically generate the [multiple = "multiple"](https://w3c.github.io/html-reference/select.html)  attribute if the property specified in the `asp-for` attribute is an `IEnumerable`. For example, given the following model:
 
 [!code-csharp[](../../mvc/views/working-with-forms/sample/final/ViewModels/CountryViewModelIEnumerable.cs?highlight=6)]
 
@@ -517,7 +607,7 @@ With the following view:
 
 Generates the following HTML:
 
-```HTML
+```html
 <form method="post" action="/Home/IndexMultiSelect">
     <select id="CountryCodes"
     multiple="multiple"
@@ -529,7 +619,7 @@ Generates the following HTML:
 <option value="DE">Germany</option>
 </select>
     <br /><button type="submit">Register</button>
-  <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+  <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
 </form>
 ```
 
@@ -551,7 +641,9 @@ Adding HTML [\<option>](https://www.w3.org/wiki/HTML/Elements/option) elements i
 
 The correct `<option>` element will be selected ( contain the `selected="selected"` attribute) depending on the current `Country` value.
 
-```HTML
+[!code-csharp[](working-with-forms/sample/final/Controllers/HomeController.cs?range=114-119)]
+
+```html
  <form method="post" action="/Home/IndexEmpty">
       <select id="Country" name="Country">
           <option value="">&lt;none&gt;</option>
@@ -560,7 +652,7 @@ The correct `<option>` element will be selected ( contain the `selected="selecte
           <option value="US">USA</option>
       </select>
       <br /><button type="submit">Register</button>
-   <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>" />
+   <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
  </form>
  ```
 
@@ -572,4 +664,4 @@ The correct `<option>` element will be selected ( contain the `selected="selecte
 * <xref:mvc/models/model-binding>
 * <xref:mvc/models/validation>
 * [IAttributeAdapter Interface](/dotnet/api/Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter)
-* [Code snippets for this document](https://github.com/aspnet/Docs/tree/master/aspnetcore/mvc/views/working-with-forms/sample/final)
+* [Code snippets for this document](https://github.com/dotnet/AspNetCore.Docs/tree/master/aspnetcore/mvc/views/working-with-forms/sample/final)
